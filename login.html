@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Portal | Amul Vidya</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --navy:#00306B;
+ --gold:#FFD200;
+ --red:#D20200;
+ --bg:#061a36;
+ --panel:#102c50;
+}
+body{
+ font-family:Poppins,sans-serif;
+ background:var(--bg);
+ color:white;
+ min-height:100vh;
+}
+header{
+ padding:15px 5%;
+ background:#041329;
+ border-bottom:1px solid #ffffff20;
+}
+nav{
+ max-width:1150px;margin:auto;
+ display:flex;align-items:center;justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:10px;font-size:23px;font-weight:800}
+.brand img{width:48px;height:48px;border-radius:50%;background:white;object-fit:contain}
+.brand span{color:var(--gold)}
+nav a{color:#c6d5e8;text-decoration:none;font-size:13px}
+main{
+ min-height:calc(100vh - 80px);
+ display:flex;align-items:center;justify-content:center;
+ padding:45px 20px;
+ background:
+ radial-gradient(circle at 15% 80%,#6c1d3d55,transparent 35%),
+ radial-gradient(circle at 85% 20%,#15548c66,transparent 35%);
+}
+.layout{
+ width:100%;max-width:1000px;
+ display:grid;grid-template-columns:1fr 1fr;
+ gap:35px;align-items:center;
+}
+.intro h1{font-size:43px;line-height:1.2;margin:20px 0}
+.intro h1 span{color:var(--gold)}
+.intro p{color:#c2d2e7;font-size:14px;line-height:2}
+.mascot{
+ margin-top:30px;width:180px;height:180px;
+ background:white;border-radius:50%;padding:15px;
+ box-shadow:0 20px 60px #0005;
+}
+.mascot img{width:100%;height:100%;object-fit:contain}
+.tag{color:var(--gold);font-size:12px;font-weight:700;letter-spacing:2px}
+.form-card{
+ background:rgba(16,44,80,.94);
+ border:1px solid #ffffff25;
+ padding:35px;border-radius:22px;
+ box-shadow:0 25px 70px #0005;
+}
+.tabs{display:flex;background:#071b36;padding:5px;border-radius:10px;margin:22px 0}
+.tabs button{
+ flex:1;padding:12px;border:0;border-radius:8px;
+ color:#bdcde0;background:transparent;
+ font-weight:700;font-family:inherit;cursor:pointer;
+}
+.tabs button.active{background:var(--gold);color:var(--navy)}
+.form-card h2{font-size:25px;margin-bottom:6px}
+.subtitle{color:#b8cbe0;font-size:12px;margin-bottom:20px}
+.field{margin-bottom:15px}
+label{display:block;font-size:12px;font-weight:600;margin-bottom:7px}
+input,select{
+ width:100%;padding:13px 14px;
+ background:#071b36;color:white;
+ border:1px solid #ffffff35;
+ border-radius:8px;font-family:inherit;
+ font-size:13px;outline:none;
+}
+input:focus,select:focus{border-color:var(--gold)}
+input::placeholder{color:#879bb5}
+.submit{
+ width:100%;padding:14px;margin-top:8px;
+ border:0;border-radius:9px;
+ background:var(--gold);color:var(--navy);
+ font-family:inherit;font-weight:800;
+ font-size:14px;cursor:pointer;
+ transition:.2s;
+}
+.submit:hover{transform:translateY(-3px);box-shadow:0 8px 20px #ffd20030}
+.message{font-size:12px;margin-top:14px;line-height:1.7}
+.note{font-size:10px;color:#9fb4d0;margin-top:18px;line-height:1.7}
+.back{display:block;text-align:center;margin-top:18px;color:#c3d3e7;font-size:12px;text-decoration:none}
+.hidden{display:none}
+footer{text-align:center;padding:20px;color:#8da4c2;font-size:11px}
+@media(max-width:750px){
+ .layout{grid-template-columns:1fr;max-width:450px;gap:25px}
+ .intro{text-align:center}
+ .intro h1{font-size:32px}
+ .mascot{width:110px;height:110px;margin-top:15px}
+ .form-card{padding:25px 20px}
+}
+</style>
+</head>
+
+<body>
+<header>
+<nav>
+<a href="index.html" style="text-decoration:none;color:white">
+<div class="brand">
+<img src="amul-vidya-mascot-logo.png" alt="Amul Vidya mascot">
+<div>Amul <span>Vidya</span></div>
+</div>
+</a>
+<a href="index.html">← Back to Home</a>
+</nav>
+</header>
+
+<main>
+<div class="layout">
+
+<div class="intro">
+<span class="tag">BHAROSA KA GYAAN</span>
+<h1>Your Journey to <span>Knowledge</span> Starts Here.</h1>
+<p>
+Welcome to the Amul Vidya Student Portal.
+Explore your subjects, access sample lessons
+and track your learning journey.
+</p>
+<div class="mascot">
+<img src="amul-vidya-mascot-logo.png" alt="Amul Vidya girl mascot">
+</div>
+</div>
+
+<div class="form-card">
+<h2>Student Portal 🎓</h2>
+<p class="subtitle">Welcome to your learning space.</p>
+
+<div class="tabs">
+<button id="loginTab" class="active" onclick="showForm('login')">Login</button>
+<button id="registerTab" onclick="showForm('register')">Register</button>
+</div>
+
+<form id="loginForm">
+<div class="field">
+<label>Email Address</label>
+<input type="email" id="loginEmail" placeholder="Enter your email" required>
+</div>
+<div class="field">
+<label>Password</label>
+<input type="password" id="loginPassword" placeholder="Enter your password" required>
+</div>
+<button class="submit" type="submit">Login to Dashboard →</button>
+</form>
+
+<form id="registerForm" class="hidden">
+<div class="field">
+<label>Student Full Name</label>
+<input type="text" id="studentName" placeholder="Enter your full name" required>
+</div>
+<div class="field">
+<label>Email Address</label>
+<input type="email" id="studentEmail" placeholder="Enter your email" required>
+</div>
+<div class="field">
+<label>Create Password</label>
+<input type="password" id="studentPassword" placeholder="Minimum 6 characters" minlength="6" required>
+</div>
+<div class="field">
+<label>Select Your Class</label>
+<select id="studentClass" required>
+<option value="">Choose your class</option>
+<option value="6">Class 6</option>
+<option value="7">Class 7</option>
+<option value="8">Class 8</option>
+<option value="9">Class 9</option>
+<option value="10">Class 10</option>
+</select>
+</div>
+<button class="submit" type="submit">Create Student Account →</button>
+</form>
+
+<p id="message" class="message" role="status"></p>
+
+<p class="note">
+Academic demonstration only. This prototype stores a basic student profile in this browser. Passwords are not saved or securely verified. Do not enter a real or reused password.
+</p>
+
+<a href="index.html" class="back">← Return to Amul Vidya Homepage</a>
+</div>
+
+</div>
+</main>
+
+<footer>
+Amul Vidya – Bharosa ka Gyaan | Academic Prototype
+</footer>
+
+<script>
+function showForm(type){
+ const login=type==='login';
+ document.getElementById('loginForm').classList.toggle('hidden',!login);
+ document.getElementById('registerForm').classList.toggle('hidden',login);
+ document.getElementById('loginTab').classList.toggle('active',login);
+ document.getElementById('registerTab').classList.toggle('active',!login);
+ document.getElementById('message').textContent='';
+}
+
+function getStudent(){
+ try{return JSON.parse(localStorage.getItem('amulVidyaStudent'))}
+ catch(e){return null}
+}
+
+document.getElementById('registerForm').addEventListener('submit',function(e){
+ e.preventDefault();
+
+ const name=document.getElementById('studentName').value.trim();
+ const email=document.getElementById('studentEmail').value.trim().toLowerCase();
+ const password=document.getElementById('studentPassword').value;
+ const studentClass=document.getElementById('studentClass').value;
+
+ if(password.length<6){
+  document.getElementById('message').textContent='Password must have at least 6 characters.';
+  return;
+ }
+
+ const student={name,email,studentClass};
+ try{
+  localStorage.setItem('amulVidyaStudent',JSON.stringify(student));
+  document.getElementById('message').textContent='Account created! You can now log in using your registered email.';
+  document.getElementById('registerForm').reset();
+  showForm('login');
+  document.getElementById('loginEmail').value=email;
+  document.getElementById('message').textContent='Registration successful! Please log in.';
+ }catch(error){
+  document.getElementById('message').textContent='Browser storage unavailable. Please try again.';
+ }
+});
+
+document.getElementById('loginForm').addEventListener('submit',function(e){
+ e.preventDefault();
+
+ const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+ const password=document.getElementById('loginPassword').value;
+ const student=getStudent();
+
+ if(!student || student.email!==email){
+  document.getElementById('message').textContent='Student profile not found. Please register first.';
+  return;
+ }
+ if(!password){
+  document.getElementById('message').textContent='Please enter a password.';
+  return;
+ }
+
+ sessionStorage.setItem('amulVidyaDemoSession','true');
+ window.location.href='dashboard.html';
+});
+</script>
+</body>
+</html>
