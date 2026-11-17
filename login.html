@@ -147,6 +147,12 @@ and track your learning journey.
 <button id="registerTab" onclick="showForm('register')">Register</button>
 </div>
 
+<div style="text-align:center; margin:15px 0;">
+  <button type="button" id="googleSignInBtn" class="submit">
+    Continue with Google
+  </button>
+</div>
+
 <form id="loginForm">
 <div class="field">
 <label>Email Address</label>
@@ -202,66 +208,171 @@ Academic demonstration only. This prototype stores a basic student profile in th
 Amul Vidya – Bharosa ka Gyaan | Academic Prototype
 </footer>
 
-<script>
-function showForm(type){
- const login=type==='login';
- document.getElementById('loginForm').classList.toggle('hidden',!login);
- document.getElementById('registerForm').classList.toggle('hidden',login);
- document.getElementById('loginTab').classList.toggle('active',login);
- document.getElementById('registerTab').classList.toggle('active',!login);
- document.getElementById('message').textContent='';
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithRedirect,
+  getRedirectResult,
+  updateProfile,
+  sendEmailVerification,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCNEOY-d-YQsC1ydwy_rB7cPI4n3CmOuqY",
+  authDomain: "amul-vidya.firebaseapp.com",
+  projectId: "amul-vidya",
+  storageBucket: "amul-vidya.firebasestorage.app",
+  messagingSenderId: "136862351704",
+  appId: "1:136862351704:web:164927972bc62911f3252d",
+  measurementId: "G-WZFP6K5NX1"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+
+const message = document.getElementById("message");
+
+function showMessage(text) {
+  message.textContent = text;
 }
 
-function getStudent(){
- try{return JSON.parse(localStorage.getItem('amulVidyaStudent'))}
- catch(e){return null}
+window.showForm = function(type) {
+  const login = type === "login";
+
+  document.getElementById("loginForm").classList.toggle("hidden", !login);
+  document.getElementById("registerForm").classList.toggle("hidden", login);
+  document.getElementById("loginTab").classList.toggle("active", login);
+  document.getElementById("registerTab").classList.toggle("active", !login);
+
+  showMessage("");
+};
+
+// Save student display information for the prototype
+function saveStudent(user, studentClass = "") {
+  localStorage.setItem("amulVidyaStudent", JSON.stringify({
+    name: user.displayName || "Student",
+    email: user.email,
+    studentClass: studentClass
+  }));
 }
 
-document.getElementById('registerForm').addEventListener('submit',function(e){
- e.preventDefault();
+// Handle email registration
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
- const name=document.getElementById('studentName').value.trim();
- const email=document.getElementById('studentEmail').value.trim().toLowerCase();
- const password=document.getElementById('studentPassword').value;
- const studentClass=document.getElementById('studentClass').value;
+  const name = document.getElementById("studentName").value.trim();
+  const email = document.getElementById("studentEmail").value.trim();
+  const password = document.getElementById("studentPassword").value;
+  const studentClass = document.getElementById("studentClass").value;
 
- if(password.length<6){
-  document.getElementById('message').textContent='Password must have at least 6 characters.';
-  return;
- }
+  if (!studentClass) {
+    showMessage("Please select your class.");
+    return;
+  }
 
- const student={name,email,studentClass};
- try{
-  localStorage.setItem('amulVidyaStudent',JSON.stringify(student));
-  document.getElementById('message').textContent='Account created! You can now log in using your registered email.';
-  document.getElementById('registerForm').reset();
-  showForm('login');
-  document.getElementById('loginEmail').value=email;
-  document.getElementById('message').textContent='Registration successful! Please log in.';
- }catch(error){
-  document.getElementById('message').textContent='Browser storage unavailable. Please try again.';
- }
+  try {
+    showMessage("Creating your account...");
+
+    const result = await createUserWithEmailAndPassword(
+      auth, email, password
+    );
+
+    await updateProfile(result.user, {
+      displayName: name
+    });
+
+    await sendEmailVerification(result.user);
+
+    await signOut(auth);
+
+    showMessage("Account created! Please verify your email, then log in.");
+
+    document.getElementById("registerForm").reset();
+    document.getElementById("loginEmail").value = email;
+
+    localStorage.setItem("amulVidyaStudent", JSON.stringify({
+      name: name,
+      email: email,
+      studentClass: studentClass
+    }));
+
+    window.showForm("login");
+
+  } catch (error) {
+    showMessage(error.message);
+  }
 });
 
-document.getElementById('loginForm').addEventListener('submit',function(e){
- e.preventDefault();
+// Handle email and password login
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
- const email=document.getElementById('loginEmail').value.trim().toLowerCase();
- const password=document.getElementById('loginPassword').value;
- const student=getStudent();
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
 
- if(!student || student.email!==email){
-  document.getElementById('message').textContent='Student profile not found. Please register first.';
-  return;
- }
- if(!password){
-  document.getElementById('message').textContent='Please enter a password.';
-  return;
- }
+  try {
+    showMessage("Signing in...");
 
- sessionStorage.setItem('amulVidyaDemoSession','true');
- window.location.href='dashboard.html';
+    const result = await signInWithEmailAndPassword(
+      auth, email, password
+    );
+
+    if (!result.user.emailVerified) {
+      await signOut(auth);
+      showMessage("Please verify your email before logging in. Check your inbox.");
+      return;
+    }
+
+    const saved = JSON.parse(
+      localStorage.getItem("amulVidyaStudent") || "{}"
+    );
+
+    saveStudent(result.user, saved.studentClass || "");
+
+    window.location.href = "dashboard.html";
+
+  } catch (error) {
+    showMessage("Login failed: " + error.message);
+  }
 });
+
+// Google Sign-in
+document.getElementById("googleSignInBtn").addEventListener("click", async () => {
+  try {
+    showMessage("Redirecting to Google Sign-in...");
+    await signInWithRedirect(auth, googleProvider);
+  } catch (error) {
+    showMessage(error.message);
+  }
+});
+
+// Complete Google sign-in after returning to the website
+getRedirectResult(auth).then((result) => {
+  if (result && result.user) {
+    saveStudent(result.user);
+    window.location.href = "dashboard.html";
+  }
+}).catch((error) => {
+  showMessage("Google Sign-in failed: " + error.message);
+});
+
+// Redirect already authenticated students
+onAuthStateChanged(auth, (user) => {
+  if (user && user.emailVerified) {
+    window.location.href = "dashboard.html";
+  }
+});
+
 </script>
 </body>
 </html>
