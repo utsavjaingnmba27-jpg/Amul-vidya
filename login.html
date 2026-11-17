@@ -213,6 +213,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/fireba
 
 import {
   getAuth,
+  setPersistence,
+  browserLocalPersistence,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -321,10 +323,12 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   try {
     showMessage("Signing in...");
 
-    const result = await signInWithEmailAndPassword(
-      auth, email, password
-    );
+   
+await setPersistence(auth, browserLocalPersistence);
 
+const result = await signInWithEmailAndPassword(
+  auth, email, password
+);
     const saved = JSON.parse(
       localStorage.getItem("amulVidyaStudent") || "{}"
     );
