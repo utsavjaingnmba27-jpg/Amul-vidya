@@ -291,11 +291,9 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
       displayName: name
     });
 
-    await sendEmailVerification(result.user);
-
     await signOut(auth);
 
-    showMessage("Account created! Please verify your email, then log in.");
+    showMessage("Account created successfully! Please log in.");
 
     document.getElementById("registerForm").reset();
     document.getElementById("loginEmail").value = email;
@@ -326,12 +324,6 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const result = await signInWithEmailAndPassword(
       auth, email, password
     );
-
-    if (!result.user.emailVerified) {
-      await signOut(auth);
-      showMessage("Please verify your email before logging in. Check your inbox.");
-      return;
-    }
 
     const saved = JSON.parse(
       localStorage.getItem("amulVidyaStudent") || "{}"
