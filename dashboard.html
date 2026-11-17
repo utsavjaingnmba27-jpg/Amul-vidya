@@ -138,7 +138,7 @@ footer{
 <main class="container">
 <div class="hero">
 <span class="eyebrow">YOUR LEARNING SPACE</span>
-<h1>Welcome, Student! 👋</h1>
+ <h1>Welcome, <span id="studentName">Student</span>! 👋</h1>
 <p>Choose your class, explore subjects and start learning with Amul Vidya.</p>
 </div>
 
@@ -299,6 +299,27 @@ function changeClass(){
 }
 
 showSubject('Mathematics',document.querySelector('.subject'));
+ 
+/* STUDENT PROFILE PERSONALIZATION */
+
+try {
+  const student = JSON.parse(
+    localStorage.getItem('amulVidyaStudent')
+  );
+
+  if (student) {
+    document.getElementById('studentName').textContent =
+      student.name;
+
+    const classSelect = document.getElementById('classSelect');
+
+    classSelect.value = student.studentClass;
+    changeClass();
+  }
+} catch (error) {
+  console.log('Student profile not available');
+}
+
 </script>
 </body>
 </html>
