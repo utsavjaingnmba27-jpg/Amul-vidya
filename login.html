@@ -218,8 +218,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
-  signInWithRedirect,
-  getRedirectResult,
+  signInWithPopup,
   updateProfile,
   sendEmailVerification,
   signOut,
@@ -345,21 +344,17 @@ const result = await signInWithEmailAndPassword(
 // Google Sign-in
 document.getElementById("googleSignInBtn").addEventListener("click", async () => {
   try {
-    showMessage("Redirecting to Google Sign-in...");
-    await signInWithRedirect(auth, googleProvider);
-  } catch (error) {
-    showMessage(error.message);
-  }
-});
+    showMessage("Signing in with Google...");
 
-// Complete Google sign-in after returning to the website
-getRedirectResult(auth).then((result) => {
-  if (result && result.user) {
+    const result = await signInWithPopup(auth, googleProvider);
+
     saveStudent(result.user);
     window.location.href = "dashboard.html";
+
+  } catch (error) {
+    console.error("Google Sign-in Error:", error);
+    showMessage("Google Sign-in failed: " + error.message);
   }
-}).catch((error) => {
-  showMessage("Google Sign-in failed: " + error.message);
 });
 
 // Redirect already authenticated students
